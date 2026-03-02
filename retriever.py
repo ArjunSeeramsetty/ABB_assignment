@@ -2,7 +2,7 @@ import os
 import pickle
 import chromadb
 from chromadb.config import Settings
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
 
@@ -41,6 +41,9 @@ class HybridRetriever:
         """
         documents is a list of dicts: {"page_content": str, "metadata": dict}
         """
+        if not documents:
+            print("No documents provided to populate(). Skipping.")
+            return
         if self.collection.count() > 0:
             print("ChromaDB collection already populated. Skipping populate step.")
             return
@@ -96,7 +99,9 @@ class HybridRetriever:
 
         # 2. BM25 Keyword Search (Top 15)
         keyword_hits = []
-        if self.bm25:
+        if self.bm25 is None or not self.all_chunks:
+            print("BM25 index not available; falling back to vector search only.")
+        else:
             tokenized_query = query.lower().split()
             bm25_scores = self.bm25.get_scores(tokenized_query)
             # manual argsort to get top 15 indices
@@ -122,6 +127,8 @@ class HybridRetriever:
             return []
 
         # 4. Rerank 
+        import time
+        t0 = time.time()
         # Reranker takes pairs: [query, doc_text]
         pairs = [[query, hit["text"]] for hit in combined_hits]
         scores = self.reranker.predict(pairs)
@@ -131,7 +138,9 @@ class HybridRetriever:
             hit["score"] = score
             
         combined_hits.sort(key=lambda x: x["score"], reverse=True)
-        return combined_hits[:top_k]
+        final_hits = combined_hits[:top_k]
+        print(f"Search for '{query[:40]}...' took {time.time() - t0:.2f}s, returning {len(final_hits)} hits.")
+        return final_hits
 
 if __name__ == "__main__":
     from ingest import get_text_chunks

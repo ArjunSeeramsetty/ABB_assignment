@@ -21,23 +21,31 @@ EVAL_QUESTIONS = [
 def run_evaluation():
     results = []
     print("Starting Evaluation Pipeline...")
+
     for item in EVAL_QUESTIONS:
         q_id = item["question_id"]
         q_text = item["question"]
-        print(f"\n--- Identifying Q{q_id} ---")
+        print(f"\n--- Q{q_id}: {q_text} ---")
+
         answer_dict = answer_question(q_text)
-        
+
+        answer = answer_dict.get("answer", "Error processing")
+        sources = answer_dict.get("sources", [])
+
         result_item = {
             "question_id": q_id,
-            "answer": answer_dict.get("answer", "Error processing"),
-            "sources": answer_dict.get("sources", [])
+            "question": q_text,
+            "answer": answer,
+            "sources": sources,
         }
         results.append(result_item)
-        print(f"A: {result_item['answer']}")
-        print(f"Sources: {result_item['sources']}")
+
+        print(f"A: {answer}")
+        print(f"Num sources: {len(sources)}")
 
     with open("results.json", "w") as f:
-        json.dump(results, f, indent=4)
+        json.dump(results, f, indent=2)
+
     print("\nEvaluation Complete. Saved to results.json")
 
 if __name__ == "__main__":
