@@ -19,5 +19,8 @@ chroma_db/
 *.sqlite3
 
 # Cached Files and Datasets
-input_pdfs/
 results.json
+
+# Jupyter Notebooks
+*.ipynb
+
