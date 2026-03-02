@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+.venv/
+venv/
+env/
+.env/
+
+# IDE Configuration
+.vscode/
+.idea/
+
+# Database files
+chroma_db/
+*.db
+*.sqlite3
+
+# Cached Files and Datasets
+input_pdfs/
+results.json
