@@ -12,9 +12,12 @@ class HybridRetriever:
         device = 'cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu')
         print(f"Using device: {device} for Retriever")
         
+        # In Kaggle/Colab, SQLite requires absolute paths to prevent Code 14 locking errors
+        persist_dir = os.path.abspath(persist_directory)
+        
         # Setup embeddings
         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model, model_kwargs={'device': device})
-        self.chroma_client = chromadb.PersistentClient(path=persist_directory)
+        self.chroma_client = chromadb.PersistentClient(path=persist_dir)
         self.collection = self.chroma_client.get_or_create_collection(name=collection_name)
         
         # Setup BM25 and chunk metadata storage
