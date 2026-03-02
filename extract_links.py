@@ -7,7 +7,7 @@ except ImportError:
     from pypdf import PdfReader
 
 try:
-    reader = PdfReader(r'C:\Users\arjun\Downloads\LLM_Assignment.pdf')
+    reader = PdfReader('LLM_Assignment.pdf')
     links = []
     for page in reader.pages:
         if '/Annots' in page:
