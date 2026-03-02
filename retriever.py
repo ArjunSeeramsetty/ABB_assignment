@@ -8,8 +8,12 @@ from sentence_transformers import CrossEncoder
 
 class HybridRetriever:
     def __init__(self, collection_name="10k_filings", persist_directory="./chroma_db", embedding_model="BAAI/bge-small-en-v1.5", reranker_model="cross-encoder/ms-marco-MiniLM-L-6-v2"):
+        import torch
+        device = 'cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu')
+        print(f"Using device: {device} for Retriever")
+        
         # Setup embeddings
-        self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model, model_kwargs={'device': 'cpu'})
+        self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model, model_kwargs={'device': device})
         self.chroma_client = chromadb.PersistentClient(path=persist_directory)
         self.collection = self.chroma_client.get_or_create_collection(name=collection_name)
         
@@ -21,7 +25,7 @@ class HybridRetriever:
         
         # Setup Reranker
         print("Loading cross encoder for reranking...")
-        self.reranker = CrossEncoder(reranker_model, max_length=512, device='cpu')
+        self.reranker = CrossEncoder(reranker_model, max_length=512, device=device)
         
         self.load_local_indices()
 
