@@ -12,8 +12,9 @@ class HybridRetriever:
         device = 'cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu')
         print(f"Using device: {device} for Retriever")
         
-        # In Kaggle/Colab, SQLite requires absolute paths to prevent Code 14 locking errors
+        # In Kaggle/Colab, SQLite requires absolute paths and pre-existing directories to prevent Code 14 locking errors
         persist_dir = os.path.abspath(persist_directory)
+        os.makedirs(persist_dir, exist_ok=True)
         
         # Setup embeddings
         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model, model_kwargs={'device': device})
