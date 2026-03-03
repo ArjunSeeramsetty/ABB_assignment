@@ -19,7 +19,7 @@ A robust Retrieval-Augmented Generation (RAG) system built to answer financial q
 
 ### 1. Hosted Notebook (Easiest)
 You can seamlessly test this entire RAG pipeline end-to-end using the provided notebook:
-1. Open `colab_evaluation.ipynb` in Google Colab or Kaggle.
+1. Open [colab_evaluation.ipynb](https://www.kaggle.com/code/arjunseeramsetty/notebook0860611f71/edit) in Google Colab or Kaggle.
 2. The notebook handles fetching PDFs, installing requirements, building the indices, and formatting the final validation questions into `results.json`.
 
 ### 2. Local Setup
