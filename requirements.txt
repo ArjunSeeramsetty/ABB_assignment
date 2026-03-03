@@ -10,4 +10,7 @@ langchain-text-splitters
 accelerate>=0.28.0
 datasets
 langchain-huggingface>=0.0.3
-pandas
+pandas<2.2.0
+numpy<2.0.0
+pyarrow<15.0.0
+scikit-learn<1.4.0

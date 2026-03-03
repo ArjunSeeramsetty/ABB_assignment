@@ -69,4 +69,4 @@ def get_text_chunks():
 
 if __name__ == "__main__":
     chunks = get_text_chunks()
-    print(f"Sample chunk metadata: {chunks[0]['metadata']}")
+    print(f"{len(chunks)} \n Sample chunk metadata: {chunks[0]['metadata']}")
